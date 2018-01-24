@@ -27,6 +27,26 @@ let persons = [
     }
 ]
 
+const generateId = () => {
+    return Math.floor(Math.random()*Number.MAX_SAFE_INTEGER)
+}
+
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    if (body.name === undefined){
+        return res.status(400).json({error: 'content missing'})
+    }
+    
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number || false
+    }
+    persons = persons.concat(person)
+    res.json(person)
+})
+
+
 app.get('/', (req, res) => {
     res.send('<h1>Hello from puhelinluettelo!</h1>')
 })
