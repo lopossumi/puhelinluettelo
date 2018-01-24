@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
 
-let notes = [
+let persons = [
     {
         id: 1,
         name: 'Mikki Hiiri',
@@ -31,8 +31,13 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello from puhelinluettelo!</h1>')
 })
 
+app.get('/info', (req,res) => {
+    res.send(
+        `Puhelinluettelossa ${persons.length} henkilön tiedot.<br/>${new Date()}`)
+})
+
 app.get('/api/persons', (req, res) => {
-    res.json(notes)
+    res.json(persons)
 })
 
 const PORT = 3001
