@@ -2,11 +2,12 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
+app.use(cors())
 app.use(bodyParser.json())
 
 morgan.token('body', function (req, res) {return req.body})
-
 app.use(morgan((tokens, req, res) =>
     [
         tokens.method(req, res),
@@ -69,6 +70,18 @@ app.post('/api/persons', (req, res) => {
     res.json(person)
 })
 
+app.put('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    if (persons.find(item => item.id === id)) {
+        const personObject = req.body
+        personObject.id = id
+        persons = persons.map(item => item.id !== id ? item : personObject)
+        res.status(200).end()
+    } else {
+        res.status(404).end() 
+    }
+
+})
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello from puhelinluettelo!</h1>')
