@@ -33,19 +33,23 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({error: 'number missing'})
     }
 
-    // if (persons.find(item => item.name === body.name)){
-    //     return res.status(400).json({error: 'name must be unique'})
-    // }
-   
-    const person = new Person({
-        name: body.name,
-        number: body.number || false
-    })
-
-    person
-        .save()
-        .then(savedPerson => {
-            res.json(Person.format(savedPerson))
+    Person
+        .find({name: body.name})
+        .then(result => {
+            if(result.length !== 0){
+                return res.status(400).json({error: 'name must be unique'})
+            } else {
+                const person = new Person({
+                    name: body.name,
+                    number: body.number || false
+                })
+            
+                person
+                    .save()
+                    .then(savedPerson => {
+                        res.json(Person.format(savedPerson))
+                    })
+            }
         })
 })
 
