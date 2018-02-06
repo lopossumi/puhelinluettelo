@@ -3,8 +3,10 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
-app.use(express.static('build'))
+const Person = require('./models/person')
+require('dotenv').config()
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -21,31 +23,7 @@ app.use(morgan((tokens, req, res) =>
 ))
 
 let persons = [
-    {
-        id: 1,
-        name: 'Mikki Hiiri',
-        number: '040-123456'
-    },
-    {
-        id: 2,
-        name: 'Aku Ankka',
-        number: '050-234567'
-    },
-    {
-        id: 3,
-        name: 'Roope Ankka',
-        number: '0400-999999'
-    },
-    {
-        id: 4,
-        name: 'Hannu Hanhi',
-        number: '040-7777777'
-    }
 ]
-
-const generateId = () => {
-    return Math.floor(Math.random()*Number.MAX_SAFE_INTEGER)
-}
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
@@ -62,13 +40,16 @@ app.post('/api/persons', (req, res) => {
         return res.status(400).json({error: 'name must be unique'})
     }
    
-    const person = {
-        id: generateId(),
+    const person = new Person({
         name: body.name,
         number: body.number || false
-    }
-    persons = persons.concat(person)
-    res.json(person)
+    })
+
+    person
+        .save()
+        .then(savedPerson => {
+            res.json(Person.format(savedPerson))
+        })
 })
 
 app.put('/api/persons/:id', (req, res) => {
@@ -104,7 +85,12 @@ app.get('/info', (req,res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    console.log("trying to get persons...")
+    Person
+        .find({})
+        .then(people => {
+            res.json(people.map(Person.format))
+        })
 })
 
 app.delete('/api/persons/:id', (req, res) =>{
