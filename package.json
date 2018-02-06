@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "node_modules/.bin/nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/lopossumi/puhelinluettelo#readme",
   "devDependencies": {
+    "eslint": "^4.17.0",
     "nodemon": "^1.14.11"
   },
   "dependencies": {
