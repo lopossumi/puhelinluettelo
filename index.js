@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+app.use(express.static('build'))
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -84,7 +85,7 @@ app.put('/api/persons/:id', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello from puhelinluettelo!</h1>')
+    res.sendfile('/build/index.html')
 })
 
 app.get('/api/persons/:id', (req, res) => {
